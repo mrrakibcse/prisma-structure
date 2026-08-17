@@ -1,0 +1,11 @@
+import {} from "express";
+export const sendResponse = (res, data) => {
+    res.status(data.statusCode).json({
+        success: data.success,
+        statusCode: data.statusCode,
+        message: data.message || "Operation successful",
+        meta: data.meta,
+        data: data.data,
+    });
+};
+//# sourceMappingURL=sendResponse.js.map

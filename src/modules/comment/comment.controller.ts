@@ -1,13 +1,14 @@
 import { type Request, type Response } from "express";
-import { sendResponse } from "../../utils/sendResponse.js";
-import { CommentService } from "./comment.service.js";
+import { sendResponse } from "../../utils/sendResponse";
+import { CommentService } from "./comment.service";
 
 export const CommentController = {
   createComment: async (req: Request, res: Response): Promise<void> => {
     try {
       const { content, postId, authorId, parentId } = req.body;
+      const finalAuthorId = authorId || req.user?.id;
 
-      if (!content || !postId || !authorId) {
+      if (!content || !postId || !finalAuthorId) {
         res.status(400).json({
           success: false,
           message: "Missing required fields: content, postId, authorId",
@@ -18,7 +19,7 @@ export const CommentController = {
       const comment = await CommentService.createComment({
         content,
         postId,
-        authorId,
+        authorId: finalAuthorId,
         parentId,
       });
 

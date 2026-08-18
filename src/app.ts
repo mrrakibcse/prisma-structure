@@ -1,14 +1,22 @@
 import express, { type Request, type Response } from "express";
 import cors from "cors";
 import "dotenv/config";
-import { prisma } from "./lib/prisma.js";
-import { applicationRoutes } from "./routes/index.js";
+import { prisma } from "./lib/prisma";
+import { applicationRoutes } from "./routes";
+import { toNodeHandler } from "better-auth/node";
+import { auth } from "./lib/auth";
 
 const app = express();
 
 // Middlewares
-app.use(cors());
+app.use(cors({ 
+  origin: process.env.CLIENT_URL || "http://localhost:3000",
+  credentials: true, // Required for sending cookies/sessions
+}));
 app.use(express.json());
+
+// 1. Mount Better-Auth Route Handler (Handles all /api/auth/* routes)
+app.all("/api/auth/*splat", toNodeHandler(auth));
 
 // Health Check Route
 app.get("/health", async (_req: Request, res: Response) => {

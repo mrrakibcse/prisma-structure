@@ -1,5 +1,5 @@
-import { prisma } from "../../lib/prisma.js";
-import { type ICreateCommentInput, type IUpdateCommentStatusInput } from "./comment.interface.js";
+import { prisma } from "../../lib/prisma";
+import { type ICreateCommentInput, type IUpdateCommentStatusInput } from "./comment.interface";
 
 export const CommentService = {
   createComment: async (payload: ICreateCommentInput) => {

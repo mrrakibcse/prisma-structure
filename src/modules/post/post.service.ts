@@ -1,5 +1,5 @@
-import { prisma } from "../../lib/prisma.js";
-import { type ICreatePostInput, type IUpdatePostInput, type IPostFilterOptions } from "./post.interface.js";
+import { prisma } from "../../lib/prisma";
+import { type ICreatePostInput, type IUpdatePostInput, type IPostFilterOptions } from "./post.interface";
 
 export const PostService = {
   createPost: async (payload: ICreatePostInput) => {

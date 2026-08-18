@@ -1,4 +1,4 @@
-import { CommentStatus } from "../../generated/prisma/client.js";
+import { CommentStatus } from "../../generated/prisma/client";
 
 export interface ICreateCommentInput {
   content: string;

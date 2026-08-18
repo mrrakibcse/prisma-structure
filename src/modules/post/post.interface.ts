@@ -1,4 +1,4 @@
-import { PostStatus } from "../../generated/prisma/client.js";
+import { PostStatus } from "../../generated/prisma/client";
 
 export interface ICreatePostInput {
   title: string;

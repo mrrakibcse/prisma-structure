@@ -1,14 +1,15 @@
 import { type Request, type Response } from "express";
-import { sendResponse } from "../../utils/sendResponse.js";
-import { PostService } from "./post.service.js";
-import { PostStatus } from "../../generated/prisma/client.js";
+import { sendResponse } from "../../utils/sendResponse";
+import { PostService } from "./post.service";
+import { PostStatus } from "../../generated/prisma/client";
 
 export const PostController = {
   createPost: async (req: Request, res: Response): Promise<void> => {
     try {
       const { title, slug, content, thumbnail, isFeatured, status, tags, authorId } = req.body;
+      const finalAuthorId = authorId || req.user?.id;
 
-      if (!title || !slug || !content || !authorId) {
+      if (!title || !slug || !content || !finalAuthorId) {
         res.status(400).json({
           success: false,
           message: "Missing required fields: title, slug, content, authorId",
@@ -24,7 +25,7 @@ export const PostController = {
         isFeatured,
         status,
         tags,
-        authorId,
+        authorId: finalAuthorId,
       });
 
       sendResponse(res, {

@@ -3,7 +3,8 @@ model Comment {
   content   String        @db.Text
   postId    String
   post      Post          @relation(fields: [postId], references: [id], onDelete: Cascade)
-  authorId  String        // better auth
+  authorId  String
+  author    User          @relation(fields: [authorId], references: [id], onDelete: Cascade)
   parentId  String?
   parent    Comment?      @relation("CommentReplies", fields: [parentId], references: [id], onDelete: Cascade)
   replies   Comment[]     @relation("CommentReplies")
@@ -15,10 +16,4 @@ model Comment {
   @@index([authorId])
   @@index([parentId])
   @@map("comments")
-}
-
-enum CommentStatus {
-  PENDING
-  APPROVED
-  REJECTED
 }

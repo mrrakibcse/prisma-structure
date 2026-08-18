@@ -8,7 +8,8 @@ model Post {
   status     PostStatus @default(DRAFT)
   tags       String[]
   views      Int        @default(0)
-  authorId   String     // better auth
+  authorId   String
+  author     User       @relation(fields: [authorId], references: [id], onDelete: Cascade)
   createdAt  DateTime   @default(now())
   updatedAt  DateTime   @updatedAt
   comments   Comment[]
@@ -16,10 +17,4 @@ model Post {
   @@index([authorId])
   @@index([status, createdAt])
   @@map("posts")
-}
-
-enum PostStatus {
-  DRAFT
-  PUBLISHED
-  ARCHIVED
 }

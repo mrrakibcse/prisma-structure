@@ -15,18 +15,32 @@ const startServer = async () => {
 
     // Graceful Shutdown Logic with Error Handling
     const shutdown = async (signal: string) => {
-      console.log(`\nReceived ${signal}. Shutting down gracefully...`);
-      try {
-        server.close(async () => {
-          await prisma.$disconnect();
-          console.log("🔌 Database disconnected. Server closed cleanly.");
-          process.exit(0);
-        });
-      } catch (error) {
-        console.error("❌ Error during server shutdown:", error);
-        process.exit(1);
-      }
-    };
+  console.log(`\nReceived ${signal}. Shutting down gracefully...`);
+
+  try {
+    await new Promise<void>((resolve, reject) => {
+      server.close((error) => {
+        if (error) {
+          reject(error);
+        } else {
+          resolve();
+        }
+      });
+    });
+
+    await prisma.$disconnect();
+
+    console.log("🔌 Database disconnected. Server closed cleanly.");
+
+    process.exit(0);
+  } catch (error) {
+    console.error("❌ Error during server shutdown:", error);
+
+    await prisma.$disconnect();
+
+    process.exit(1);
+  }
+};
 
     process.on("SIGINT", () => shutdown("SIGINT"));
     process.on("SIGTERM", () => shutdown("SIGTERM"));

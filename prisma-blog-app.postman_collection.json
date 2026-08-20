@@ -1,0 +1,415 @@
+{
+	"info": {
+		"_postman_id": "b3e94a8f-2c1a-4d7e-9f3b-5819d426a110",
+		"name": "Prisma Blog App API",
+		"description": "Complete Postman collection for Express.js + Prisma 7 + Better Auth Blog API including Auth, Posts, Comments, and System Health Check.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:7000",
+			"type": "string"
+		}
+	],
+	"item": [
+		{
+			"name": "Health Check",
+			"item": [
+				{
+					"name": "Get System Health",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/health",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"health"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Authentication (Better Auth)",
+			"item": [
+				{
+					"name": "1. Sign Up (Email & Password)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"John Doe\",\n  \"email\": \"john@example.com\",\n  \"password\": \"Password123!\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/auth/sign-up/email",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"sign-up",
+								"email"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "2. Sign In (Email & Password)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"john@example.com\",\n  \"password\": \"Password123!\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/auth/sign-in/email",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"sign-in",
+								"email"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "3. Get Current Session",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/auth/get-session",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"get-session"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "4. Verify Email",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/auth/verify-email?token=YOUR_VERIFICATION_TOKEN",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"verify-email"
+							],
+							"query": [
+								{
+									"key": "token",
+									"value": "YOUR_VERIFICATION_TOKEN"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "5. Sign Out",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/auth/sign-out",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"sign-out"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Posts",
+			"item": [
+				{
+					"name": "Get All Posts",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/posts?status=PUBLISHED&isFeatured=true",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"posts"
+							],
+							"query": [
+								{
+									"key": "searchTerm",
+									"value": "typescript",
+									"disabled": true
+								},
+								{
+									"key": "status",
+									"value": "PUBLISHED"
+								},
+								{
+									"key": "isFeatured",
+									"value": "true"
+								},
+								{
+									"key": "authorId",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "tag",
+									"value": "backend",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Post By Slug",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/posts/getting-started-with-prisma-7",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"posts",
+								"getting-started-with-prisma-7"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Post (Protected)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"title\": \"Getting Started with Prisma 7 and Express\",\n  \"slug\": \"getting-started-with-prisma-7\",\n  \"content\": \"This is the full article content introducing Prisma 7 and Express.js setup.\",\n  \"thumbnail\": \"https://example.com/thumb.jpg\",\n  \"isFeatured\": true,\n  \"status\": \"PUBLISHED\",\n  \"tags\": [\"express\", \"prisma\", \"typescript\"]\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/posts",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"posts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Post (Protected)",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"title\": \"Updated: Getting Started with Prisma 7\",\n  \"isFeatured\": false\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/posts/POST_ID_HERE",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"posts",
+								"POST_ID_HERE"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Post (Protected)",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/posts/POST_ID_HERE",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"posts",
+								"POST_ID_HERE"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Comments",
+			"item": [
+				{
+					"name": "Get Comments by Post ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/comments/post/POST_ID_HERE",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"comments",
+								"post",
+								"POST_ID_HERE"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Comment (Protected)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"content\": \"Great article! Thanks for sharing.\",\n  \"postId\": \"POST_ID_HERE\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/comments",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"comments"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Comment Status (Admin/Editor)",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"status\": \"APPROVED\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/comments/COMMENT_ID_HERE/status",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"comments",
+								"COMMENT_ID_HERE",
+								"status"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Comment (Protected)",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/comments/COMMENT_ID_HERE",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"comments",
+								"COMMENT_ID_HERE"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

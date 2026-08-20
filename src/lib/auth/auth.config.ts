@@ -1,3 +1,4 @@
+import "dotenv/config";
 import type { BetterAuthOptions } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
 import { prisma } from "../prisma";
@@ -7,6 +8,7 @@ export const authConfig: BetterAuthOptions = {
   database: prismaAdapter(prisma, {
     provider: "postgresql",
   }),
+  trustedOrigins: [process.env.CLIENT_URL || "http://localhost:3000"],
   emailAndPassword: {
     enabled: true,
     requireEmailVerification: true,

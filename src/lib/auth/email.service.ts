@@ -1,47 +1,41 @@
 import nodemailer from "nodemailer";
+import { config } from "../../config";
 import { getVerificationEmailTemplate } from "./email-templates";
 
-const createTransporter = () => {
-  if (process.env.SMTP_HOST && process.env.SMTP_USER) {
-    return nodemailer.createTransport({
-      host: process.env.SMTP_HOST,
-      port: Number(process.env.SMTP_PORT) || 587,
-      secure: process.env.SMTP_SECURE === "true",
-      auth: {
-        user: process.env.SMTP_USER,
-        pass: process.env.SMTP_PASS,
-      },
-    });
-  }
-  return null;
-};
-
-export const sendVerificationEmail = async ({
-  to,
-  name,
-  url,
-}: {
+type EmailParams = {
   to: string;
   name: string;
   url: string;
-}): Promise<void> => {
-  const transporter = createTransporter();
-  const { subject, html, text } = getVerificationEmailTemplate(url, name);
+};
 
-  if (transporter) {
+const transporter = nodemailer.createTransport({
+  host: config.smtp.host,
+  port: config.smtp.port,
+  secure: config.smtp.secure,
+  auth: {
+    user: config.smtp.user,
+    pass: config.smtp.pass,
+  },
+});
+
+export const sendVerificationEmail = async (params: EmailParams): Promise<void> => {
+  const { to, name, url } = params;
+
+  try {
+    const { subject, html, text } = getVerificationEmailTemplate(url, name);
+
     await transporter.sendMail({
-      from: process.env.EMAIL_FROM || '"My Blog App" <noreply@blogapp.com>',
+      from: config.smtp.from,
       to,
       subject,
       text,
       html,
     });
-    console.log(`✉️ Verification email sent to ${to}`);
-  } else {
-    // Development fallback logger
-    console.log("\n=======================================================");
-    console.log(`✉️  [DEV EMAIL VERIFICATION] To: ${to}`);
-    console.log(`🔗  Verification URL: ${url}`);
-    console.log("=======================================================\n");
+
+    console.log(`✉️ Verification email sent successfully to ${to}`);
+  } catch (error) {
+    console.error("Email sending failed:", error);
   }
 };
+
+

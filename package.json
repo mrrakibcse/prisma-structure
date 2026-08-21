@@ -16,6 +16,7 @@
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.6",
     "@types/node": "^26.2.0",
+    "@types/nodemailer": "^8.0.1",
     "@types/pg": "^8.21.0",
     "eslint-plugin-simple-import-sort": "^14.0.0",
     "prisma": "^7.9.1",
@@ -25,7 +26,6 @@
   "dependencies": {
     "@prisma/adapter-pg": "^7.9.1",
     "@prisma/client": "^7.9.1",
-    "@types/nodemailer": "^8.0.1",
     "better-auth": "^1.6.30",
     "cors": "^2.8.6",
     "dotenv": "^17.4.2",

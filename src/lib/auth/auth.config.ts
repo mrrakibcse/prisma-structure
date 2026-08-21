@@ -1,6 +1,8 @@
 import "dotenv/config";
+
 import type { BetterAuthOptions } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
+
 import { config } from "../../config";
 import { prisma } from "../prisma";
 import { sendVerificationEmail } from "./email.service";

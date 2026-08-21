@@ -1,4 +1,5 @@
 import nodemailer from "nodemailer";
+
 import { config } from "../../config";
 import { getVerificationEmailTemplate } from "./email-templates";
 
@@ -7,6 +8,7 @@ type EmailParams = {
   name: string;
   url: string;
 };
+
 
 const transporter = nodemailer.createTransport({
   host: config.smtp.host,
@@ -23,7 +25,6 @@ export const sendVerificationEmail = async (params: EmailParams): Promise<void> 
 
   try {
     const { subject, html, text } = getVerificationEmailTemplate(url, name);
-
     await transporter.sendMail({
       from: config.smtp.from,
       to,

@@ -1,7 +1,8 @@
 import { Router } from "express";
-import { CommentController } from "./comment.controller";
-import { requireAuth, requireRole } from "../../middlewares/auth.middleware";
+
 import { UserRole } from "../../generated/prisma/client";
+import { requireAuth, requireRole } from "../../middlewares/auth.middleware";
+import { CommentController } from "./comment.controller";
 
 const router = Router();
 

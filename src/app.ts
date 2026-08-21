@@ -1,24 +1,38 @@
-import express, { type Request, type Response } from "express";
-import cors from "cors";
-import { config } from "./config";
-import { prisma } from "./lib/prisma";
-import { applicationRoutes } from "./routes";
 import { toNodeHandler } from "better-auth/node";
+import cors from "cors";
+import express, { type Request, type Response } from "express";
+
+import { config } from "./config";
 import { auth } from "./lib/auth";
+import { prisma } from "./lib/prisma";
+import { globalErrorHandler } from "./middlewares/globalErrorHandler";
+import { notFoundHandler } from "./middlewares/notFound";
+import { applicationRoutes } from "./routes";
 
 const app = express();
 
-// Middlewares
-app.use(cors({
-  origin: config.clientUrl,
-  credentials: true, // Required for sending cookies/sessions
-}));
+// ==========================================
+// 1. Core Middlewares
+// ==========================================
+app.use(
+  cors({
+    origin: config.clientUrl,
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization", "Cookie"],
+  })
+);
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
-// 1. Mount Better-Auth Route Handler (Handles all /api/auth/* routes)
+// ==========================================
+// 2. Authentication Route Handler
+// ==========================================
 app.all("/api/auth/*splat", toNodeHandler(auth));
 
-// Root Route
+// ==========================================
+// 3. System & Health Routes
+// ==========================================
 app.get("/", (_req: Request, res: Response) => {
   res.json({
     success: true,
@@ -26,7 +40,6 @@ app.get("/", (_req: Request, res: Response) => {
   });
 });
 
-// Health Check Route
 app.get("/health", async (_req: Request, res: Response) => {
   try {
     await prisma.$queryRaw`SELECT 1`;
@@ -45,15 +58,15 @@ app.get("/health", async (_req: Request, res: Response) => {
   }
 });
 
-// Application API v1 Routes
+// ==========================================
+// 4. Application API v1 Routes
+// ==========================================
 app.use("/api/v1", applicationRoutes);
 
-// Manual 404 Route Not Found Fallback
-app.use((req: Request, res: Response) => {
-  res.status(404).json({
-    success: false,
-    message: `Route '${req.originalUrl}' not found`,
-  });
-});
+// ==========================================
+// 5. Error & Fallback Middlewares
+// ==========================================
+app.use(notFoundHandler);
+app.use(globalErrorHandler);
 
 export default app;

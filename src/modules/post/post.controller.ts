@@ -1,7 +1,8 @@
 import { type Request, type Response } from "express";
+
+import { PostStatus } from "../../generated/prisma/client";
 import { sendResponse } from "../../utils/sendResponse";
 import { PostService } from "./post.service";
-import { PostStatus } from "../../generated/prisma/client";
 
 export const PostController = {
   createPost: async (req: Request, res: Response): Promise<void> => {
